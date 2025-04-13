@@ -14,7 +14,8 @@ document.getElementById("login-form").addEventListener("submit", function (e) {
             localStorage.setItem("token", data.token);
             window.location.href = "index.html";
         } else {
-            alert("Login failed: " + (data.message || "Invalid credentials"));
+            console.log(data);
+            alert((data.message || "Invalid credentials"));
         }
     })
     .catch(err => console.error("Login error:", err));

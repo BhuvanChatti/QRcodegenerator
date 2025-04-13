@@ -1,6 +1,6 @@
 document.getElementById('lgout').addEventListener('click', function (e) {
 	localStorage.removeItem('token');
-	window.location.href('login.html');
+	window.location.href=('login.html');
 });
 document.getElementById('qr-form').addEventListener('submit', function (e) {
 	e.preventDefault();
