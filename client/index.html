@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>QR Code Generator</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="style.css">
+</head>
+<script>
+	if (!localStorage.getItem("token")) {
+		window.location.href = "login.html";
+	}
+</script>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="#">QR Code Generator</a>
+		<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" id="lgout" href="#">Logout</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="container">
+		<h1 class="mt-4">QR Code Generator</h1>
+		<form id="qr-form">
+			<div class="form-group">
+				<label for="qr-id">ID:</label>
+				<input type="text" class="form-control" id="qr-id" placeholder="Enter ID">
+			</div>
+			<div class="form-group">
+				<label for="qr-price">Price:</label>
+				<input type="text" class="form-control" id="qr-price" placeholder="Enter Price">
+			</div>
+			<button type="submit" class="btn btn-danger">Generate QR Code</button>
+		</form>
+
+		<div id="qr-result" class="mt-4"></div>
+	</div>
+
+	<script src="script.js"></script>
+</body>
+
+</html>
