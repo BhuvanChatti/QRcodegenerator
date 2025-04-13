@@ -1,4 +1,5 @@
 import express from 'express';
+import path from "path";
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { conndb, User } from './database.js';
@@ -8,6 +9,7 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from './JWT.js';
 import colors from "colors";
 import nodemailer from "nodemailer";
+import { fileURLToPath } from 'url';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,6 +26,12 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, 'client')));
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname, 'client', 'index.html'));
+});
 app.use(bodyParser.json());
 app.use(cors());
 app.use(router);
