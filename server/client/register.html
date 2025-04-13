@@ -51,6 +51,12 @@
     </style>
 </head>
 
+<script>
+    if (localStorage.getItem("token")) {
+        window.location.href = "index.html";
+    }
+</script>
+
 <body>
     <div class="register-container text-center">
         <h2>Register</h2>
