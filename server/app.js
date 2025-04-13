@@ -80,8 +80,11 @@ app.post("/login",
 		const { email, password } = req.body;
 		try {
 			const user = await User.findOne({ email });
-			if (!user || user.password !== password) {
-				return res.status(401).json({ message: 'Invalid email or password' });
+			if (!user) {
+				return res.status(401).json({ message: 'User not registered. Register to Login' });
+			}
+			if (user.password !== password) {
+				return res.status(401).json({ message: 'Incorrect Password. Try Again!' });
 			}
 			const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '1d' });
 			const date = new Date();
