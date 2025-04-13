@@ -11,7 +11,7 @@ document.getElementById('qr-form').addEventListener('submit', function (e) {
 
 	const token = localStorage.getItem("token");
 
-	fetch('http://localhost:3000/generate-qr', {
+	fetch('https://qrcodegenerator-zuzx.onrender.com/generate-qr', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

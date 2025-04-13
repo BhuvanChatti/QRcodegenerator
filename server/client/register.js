@@ -4,7 +4,7 @@ form.addEventListener('submit', async (e) => {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
-    const response = await fetch('http://localhost:3000/register', {
+    const response = await fetch('https://qrcodegenerator-zuzx.onrender.com/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
