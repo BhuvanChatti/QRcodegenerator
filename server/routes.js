@@ -4,6 +4,6 @@ import { authenticateToken } from './JWT.js';
 
 const router = express.Router();
 
-router.post('/generate-qr', authenticateToken, generateQR);
+router.post('/api/generate-qr', authenticateToken, generateQR);
 
 export default router;

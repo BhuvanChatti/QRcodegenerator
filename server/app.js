@@ -13,6 +13,8 @@ import { fileURLToPath } from 'url';
 
 const app = express();
 const port = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 conndb();
 const transporter = nodemailer.createTransport({
@@ -26,16 +28,10 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-app.use(express.static(path.join(__dirname, 'client')));
-app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname, 'client', 'index.html'));
-});
 app.use(bodyParser.json());
 app.use(cors());
 app.use(router);
-app.post("/register", [
+app.post("/api/register", [
 	body('name').notEmpty().withMessage('The name is required'),
 	body('email').notEmpty().withMessage('The email is required').bail().isEmail().withMessage('This should be an email'),
 	body('phoneno').notEmpty().withMessage('The phone.no is required').bail().isLength({ min: 10, max: 10 }).withMessage('Phone number should be 10 digits only'),
@@ -48,6 +44,10 @@ app.post("/register", [
 	}
 	const { name, email, phoneno, password } = req.body;
 	try {
+		const echeck = await User.findOne({ email: email });
+		if (echeck) {
+			return res.status(400).json({ errors: ['User already registered with this email'] });
+		}
 		const user = await User.create({ name, email, phoneno, password });
 		const date = new Date();
 		const ctime = date.toLocaleString();
@@ -62,11 +62,11 @@ app.post("/register", [
 		});
 		res.status(201).json({ message: "User created successfully", user });
 	} catch (error) {
-		res.status(500).send('Error creating user: ' + error.message);
+		res.status(400).send('Error creating user: ' + error.message);
 	}
 });
 
-app.post("/login",
+app.post("/api/login",
 	[
 		body('email').notEmpty().withMessage('Email is required').bail().isEmail().withMessage('Enter a valid email'),
 		body('password').notEmpty().withMessage('Password is required')
@@ -104,6 +104,11 @@ app.post("/login",
 		}
 	}
 );
+
+app.use(express.static(path.join(__dirname, "../client/build")));
+app.use('*', (req, res) => {
+	res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
 
 app.listen(port, () => {
 	console.log(`Server listening on port ${port}`.magenta);

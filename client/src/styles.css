@@ -1,0 +1,123 @@
+.Toastify__toast-container {
+  display: flex;
+  justify-content: center;
+  width: 100% !important;
+}
+
+.Toastify__toast {
+  width: fit-content !important;
+  white-space: nowrap !important;
+  padding-right: 30px !important;
+}
+
+/* General Body Styling */
+body {
+    background: #f8f6f7;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Centered Container for Login & Register */
+
+.center-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container,
+.register-container {
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(53, 133, 165, 1.0);
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+}
+
+.login-container h1,
+.register-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.form-control {
+    margin-bottom: 20px;
+}
+
+/* Login & Register Button Styles */
+
+.btn-login:hover,
+.btn-register:hover,
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Navbar for Home Page */
+.navbar {
+    background-color: #343a40 !important;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+.nav-link:hover {
+    color: #f8f9fa !important;
+}
+
+/* Home Container Specific */
+.home-container {
+    margin-top: 90px;
+    width: 800px;
+}
+
+.home-title {
+    color: #343a40;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* QR Form */
+#qr-form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+#qr-result {
+    margin-top: 30px;
+    text-align: center;
+}
+
+#qr-result img {
+    max-width: 100%;
+    height: auto;
+    border: 5px solid #007bff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#qr-result p {
+    margin-top: 10px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Responsive fix to allow pages to scroll when needed */
+@media screen and (max-height: 650px) {
+    body {
+        align-items: flex-start;
+        padding: 20px 0;
+    }
+}
