@@ -23,7 +23,7 @@ function Register() {
             return
         setLd(true);
         try {
-            const res = await axios.post("http://localhost:3000/api/register", { name, email, password, phoneno }, { headers: { "Content-Type": "application/json" }, responseType: 'json' });
+            const res = await axios.post("https://qrcodegenerator-zuzx.onrender.com/api/register", { name, email, password, phoneno }, { headers: { "Content-Type": "application/json" }, responseType: 'json' });
             toast.success("Registration Successfull!! Continue to login page");
             setTimeout(() => navigate('/Login'), 1500);
         }

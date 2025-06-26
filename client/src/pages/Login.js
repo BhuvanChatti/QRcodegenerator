@@ -16,7 +16,7 @@ function Login() {
     const handlesubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:3000/api/login", { email, password }, { headers: { "Content-Type": "application/json" }, responseType: 'json' });
+            const res = await axios.post("https://qrcodegenerator-zuzx.onrender.com/api/login", { email, password }, { headers: { "Content-Type": "application/json" }, responseType: 'json' });
             console.log(res);
             toast.success("Login Successfull");
             localStorage.setItem("token", res.data.token);

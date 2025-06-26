@@ -28,7 +28,7 @@ function Home() {
             navigate('/login');
         }
         try {
-            const res = await axios.post("http://localhost:3000/api/generate-qr", { data: { id, price } },
+            const res = await axios.post("https://qrcodegenerator-zuzx.onrender.com/api/generate-qr", { data: { id, price } },
                 {
                     headers:
                         { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
