@@ -1,7 +1,7 @@
 import { toBuffer } from 'qrcode';
 
 export function formatData(data) {
-	const qrCodeText = `Product ID: ${data.id}, Price: ₹${data.price}`;
+	const qrCodeText = `Product ID: ${data.id}, amount: ₹${data.amount}`;
 	return qrCodeText;
 }
 

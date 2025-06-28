@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
 const qrSchema = new mongoose.Schema({
 	email: String,
 	ID: String,
-	price: String,
+	amount: String,
 	qrdata: String,
 	QRimg: Buffer
 });

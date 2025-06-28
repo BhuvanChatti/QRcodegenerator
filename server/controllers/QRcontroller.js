@@ -1,28 +1,18 @@
-import { QR } from './database.js';
-import { formatData, generateQRCode } from './service.js';
+import { QR } from '../database.js';
+import { formatData, generateQRCode } from '../service.js';
 import nodemailer from "nodemailer";
+import transporter from '../mail.js';
 
-const transporter = nodemailer.createTransport({
-	service: "Gmail",
-	auth: {
-		host: "smtp.gmail.com",
-		port: 587,
-		secure: false,
-		user: "bhuvanchatti579@gmail.com",
-		pass: "ikml kxgu yyzw mquz",
-	},
-});
-
-const generateQR = async (req, res) => {
+export const generateQR = async (req, res) => {
 	try {
 		// console.log("Received request:", JSON.stringify(req.body, null, 2));
-		const { id, price } = req.body.data;
+		const { id, amount } = req.body.data;
 		const data = req.body.data;
 		const email = req.user.email;
 		const qrdata = formatData(data);
-		// console.log(id,price,data,email,qrdata);
+		// console.log(id,amount,data,email,qrdata);
 		const QRimg = await generateQRCode(qrdata);
-		const qr = await QR.create({ email, ID: id, price, qrdata, QRimg });
+		const qr = await QR.create({ email, ID: id, amount, qrdata, QRimg });
 		res.setHeader('Content-Disposition', 'attachment; filename=qrcode.png');
 		const date = new Date();
 		const ctime = date.toLocaleString();
@@ -46,4 +36,13 @@ const generateQR = async (req, res) => {
 	}
 };
 
-export default generateQR;
+export const MyQRs = async (req, res) => {
+	try {
+		// console.log("Received request:", JSON.stringify(req.body, null, 2));
+		const email = req.user.email;
+		const qrs = await QR.find({ email: email }).sort({ _id: -1 });
+		res.status(200).send({ qrs: qrs });
+	} catch (err) {
+		res.status(500).send({ error: 'Internal Server Error' });
+	}
+};

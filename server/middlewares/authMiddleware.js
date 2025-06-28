@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 export const JWT_SECRET = "anits";
 
-export const authenticateToken = (req, res, next) => {
+export const authToken = (req, res, next) => {
 	const authHeader = req.headers['authorization'];
 	const token = authHeader && authHeader.split(' ')[1];
 

@@ -36,16 +36,16 @@ function Register() {
         }
     }
     return (
-        <div className="center-page">
-            <div className="container register-container text-center">
-                <h2 class="register-title">Register</h2>
-                <form id="registerForm" onSubmit={handlesubmit}>
-                    <input className="form-control" type="text" name="name" value={name} onChange={(e) => setN(e.target.value)} placeholder="Name" required />
-                    <input className="form-control" type="email" name="email" value={email} onChange={(e) => setE(e.target.value)} placeholder="Email" required />
-                    <input className="form-control" type="text" name="phoneno" value={phoneno} onChange={(e) => setPh(e.target.value)} placeholder="Phone Number" required />
-                    <input className="form-control" type="password" name="password" value={password} onChange={(e) => setP(e.target.value)} placeholder="Password" required />
-                    <button type="submit" className="btn btn-danger">Register</button>
-                    <p>Already have an account? <a href="/login">Login here</a></p>
+        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+            <div className="bg-white p-8 rounded-xl shadow-[0_5px_20px_rgba(53,133,165,1)] w-full max-w-md text-center">
+                <h2 className="text-2xl font-bold mb-6 text-gray-800">Register</h2>
+                <form id="registerForm" onSubmit={handlesubmit} className="space-y-4">
+                    <input className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="name" value={name} onChange={(e) => setN(e.target.value)} placeholder="Name" required />
+                    <input className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="email" name="email" value={email} onChange={(e) => setE(e.target.value)} placeholder="Email" required />
+                    <input className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="phoneno" value={phoneno} onChange={(e) => setPh(e.target.value)} placeholder="Phone Number" required />
+                    <input className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="password" name="password" value={password} onChange={(e) => setP(e.target.value)} placeholder="Password" required />
+                    <button type="submit" className="w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">Register</button>
+                    <p className="text-sm text-gray-600">Already have an account? <a href="/login" className="text-blue-600 hover:underline">Login here</a></p>
                 </form>
             </div>
         </div>
