@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import QRCode from 'qrcode';
@@ -196,7 +196,12 @@ export default function Home() {
     return (
         <div className="min-h-screen bg-zinc-50 flex flex-col">
             <nav className="bg-zinc-900 px-6 py-4 flex items-center justify-between shrink-0">
-                <span className="text-white font-semibold text-lg tracking-tight">QR Generator</span>
+                <div className="flex items-center gap-2.5">
+                    <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg">
+                        <img src="/logo.svg" alt="logo" className="w-4 h-4" />
+                    </div>
+                    <span className="text-white font-semibold text-lg tracking-tight">QR Generator</span>
+                </div>
                 <div className="flex items-center gap-3">
                     <Link to="/myqrs" className="text-sm text-zinc-300 hover:text-white transition-colors px-3 py-1.5 rounded-md hover:bg-zinc-800">
                         My QRs

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -110,7 +110,12 @@ export default function MyQRs() {
                 <Link to="/" className="flex items-center gap-2 text-zinc-300 hover:text-white transition-colors text-sm">
                     ← Back
                 </Link>
-                <span className="text-white font-semibold text-lg tracking-tight">My QR Codes</span>
+                <div className="flex items-center gap-2.5">
+                    <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg">
+                        <img src="/logo.svg" alt="logo" className="w-4 h-4" />
+                    </div>
+                    <span className="text-white font-semibold text-lg tracking-tight">My QR Codes</span>
+                </div>
                 <span className="text-zinc-500 text-sm">{qrs.length} total</span>
             </nav>
 
