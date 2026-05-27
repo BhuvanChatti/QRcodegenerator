@@ -1,5 +1,6 @@
 import { body, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import { JWT_SECRET } from '../middlewares/authMiddleware.js';
 import { User } from "../database.js";
 import transporter from '../mail.js';
@@ -7,62 +8,56 @@ import transporter from '../mail.js';
 export const registerC = async (req, res) => {
     const errs = validationResult(req);
     if (!errs.isEmpty()) {
-        const errarr = errs.array().map(err => err.msg);
-        return res.status(400).json({ errors: errarr });
+        return res.status(400).json({ errors: errs.array().map(e => e.msg) });
     }
     const { name, email, phoneno, password } = req.body;
     try {
-        const echeck = await User.findOne({ email: email });
-        if (echeck) {
-            return res.status(400).json({ errors: ['User already registered with this email'] });
+        const existing = await User.findOne({ email });
+        if (existing) {
+            return res.status(400).json({ errors: ['Email already registered'] });
         }
-        const user = await User.create({ name, email, phoneno, password });
-        const date = new Date();
-        const ctime = date.toLocaleString();
-        const mail = await transporter.sendMail({
-            from: '<bhuvanchatti579@gmail.com>',
-            to: user.email,
-            subject: "Successfully registered at Qr Gen",
-            html: `<h2>Registration successful on our site at <strong>${ctime}</strong>.</p>
-				<h2>Login with your credentials at: 
-					<a href="http://127.0.0.1:5500/Node%20proj/qr-code-generator/client/index.html" target="_blank">Click Here to login</a>
-				</h2>`,
-        });
-        res.status(201).json({ message: "User created successfully", user });
+        const hash = await bcrypt.hash(password, 12);
+        const user = await User.create({ name, email, phoneno, password: hash });
+
+        transporter.sendMail({
+            from: 'bhuvanchattiproject@gmail.com',
+            to: email,
+            subject: 'Welcome to QR Generator',
+            html: `<h2>Hi ${name}, you're all set!</h2><p>Start generating QR codes at <a href="https://qrcodegenerator-zuzx.onrender.com">qrcodegenerator-zuzx.onrender.com</a></p>`
+        }).catch(err => console.error('Email error:', err.message));
+
+        res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
-        res.status(400).send('Error creating user: ' + error.message);
+        res.status(500).json({ errors: ['Registration failed. Please try again.'] });
     }
 };
 
 export const loginC = async (req, res) => {
     const errs = validationResult(req);
     if (!errs.isEmpty()) {
-        const errarr = errs.array().map(err => err.msg);
-        return res.status(400).json({ errors: errarr });
+        return res.status(400).json({ errors: errs.array().map(e => e.msg) });
     }
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ message: 'User not registered. Register to Login' });
+            return res.status(401).json({ message: 'No account found with this email' });
         }
-        if (user.password !== password) {
-            return res.status(401).json({ message: 'Incorrect Password. Try Again!' });
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Incorrect password' });
         }
         const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '1d' });
-        const date = new Date();
-        const ctime = date.toLocaleString();
-        const mail = await transporter.sendMail({
-            from: '<bhuvanchatti579@gmail.com>',
+
+        transporter.sendMail({
+            from: 'bhuvanchattiproject@gmail.com',
             to: email,
-            subject: "Logged in to Qr Gen",
-            html: `<h1>You've loggged in to the site at ${ctime}</h1>
-				<h2>genrate superfast QR codes: <a href="http://127.0.0.1:5500/Node%20proj/qr-code-generator/client/index.html">Here</a><h2>`,
-        });
+            subject: 'New login – QR Generator',
+            html: `<p>Hi ${user.name}, you logged in at ${new Date().toLocaleString()}. If this wasn't you, change your password immediately.</p>`
+        }).catch(err => console.error('Email error:', err.message));
+
         res.status(200).json({ message: 'Login successful', token });
-    }
-    catch (err) {
-        console.log(err);
+    } catch (err) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+};

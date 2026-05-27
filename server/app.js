@@ -2,6 +2,7 @@ import express from 'express';
 import path from "path";
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import helmet from 'helmet';
 import { conndb, User } from './database.js';
 import qrRouter from './routers/QRroute.js';
 import { body, validationResult } from 'express-validator';
@@ -18,6 +19,7 @@ const __dirname = path.dirname(__filename);
 
 conndb();
 
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/api", qrRouter);

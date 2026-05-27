@@ -1,54 +1,105 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-function Register() {
-    const [name, setN] = useState('');
-    const [email, setE] = useState('');
-    const [password, setP] = useState('');
-    const [phoneno, setPh] = useState('');
-    const [loading, setLd] = useState(false);
+const API = process.env.REACT_APP_API_URL || 'https://qrcodegenerator-zuzx.onrender.com/api';
 
+export default function Register() {
+    const [form, setForm] = useState({ name: '', email: '', phoneno: '', password: '' });
+    const [showPw, setShowPw] = useState(false);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            navigate('/');
-        }
+        if (localStorage.getItem('token')) navigate('/');
     }, [navigate]);
-    const handlesubmit = async (e) => {
+
+    const set = (key) => (e) => setForm(f => ({ ...f, [key]: e.target.value }));
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (loading)
-            return
-        setLd(true);
+        if (loading) return;
+        setLoading(true);
         try {
-            const res = await axios.post("https://qrcodegenerator-zuzx.onrender.com/api/register", { name, email, password, phoneno }, { headers: { "Content-Type": "application/json" }, responseType: 'json' });
-            toast.success("Registration Successfull!! Continue to login page");
-            setTimeout(() => navigate('/Login'), 1500);
+            await axios.post(`${API}/register`, form);
+            toast.success('Registered! Please sign in.');
+            setTimeout(() => navigate('/login'), 1200);
+        } catch (err) {
+            const errors = err.response?.data?.errors;
+            toast.error(Array.isArray(errors) ? errors.join(', ') : 'Registration failed');
+        } finally {
+            setLoading(false);
         }
-        catch (error) {
-            console.log(error.response.data.errors);
-            toast.error(`${error.response.data.errors.join(', ')}`);
-        }
-        finally {
-            setLd(false);
-        }
-    }
+    };
+
+    const field = (label, key, type = 'text', placeholder = '') => (
+        <div>
+            <label className="block text-xs font-medium text-zinc-500 mb-1.5">{label}</label>
+            <input
+                type={type}
+                value={form[key]}
+                onChange={set(key)}
+                placeholder={placeholder}
+                className="w-full px-3 py-2.5 text-sm bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900"
+                required
+            />
+        </div>
+    );
+
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <div className="bg-white p-8 rounded-xl shadow-[0_5px_20px_rgba(53,133,165,1)] w-full max-w-md text-center">
-                <h2 className="text-2xl font-bold mb-6 text-gray-800">Register</h2>
-                <form id="registerForm" onSubmit={handlesubmit} className="space-y-4">
-                    <input className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="name" value={name} onChange={(e) => setN(e.target.value)} placeholder="Name" required />
-                    <input className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="email" name="email" value={email} onChange={(e) => setE(e.target.value)} placeholder="Email" required />
-                    <input className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="phoneno" value={phoneno} onChange={(e) => setPh(e.target.value)} placeholder="Phone Number" required />
-                    <input className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="password" name="password" value={password} onChange={(e) => setP(e.target.value)} placeholder="Password" required />
-                    <button type="submit" className="w-full py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">Register</button>
-                    <p className="text-sm text-gray-600">Already have an account? <a href="/login" className="text-blue-600 hover:underline">Login here</a></p>
-                </form>
+        <div className="min-h-screen bg-zinc-50 flex items-center justify-center px-4">
+            <div className="w-full max-w-sm">
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-12 h-12 bg-zinc-900 rounded-xl mb-4">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 3.5a.5.5 0 11-1 0 .5.5 0 011 0z" />
+                        </svg>
+                    </div>
+                    <h1 className="text-2xl font-bold text-zinc-900">Create Account</h1>
+                    <p className="text-sm text-zinc-500 mt-1">Start generating QR codes</p>
+                </div>
+
+                <div className="bg-white rounded-2xl border border-zinc-200 p-6 shadow-sm">
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        {field('Name', 'name', 'text', 'John Doe')}
+                        {field('Email', 'email', 'email', 'you@example.com')}
+                        {field('Phone Number', 'phoneno', 'tel', '+91 9876543210')}
+                        <div>
+                            <label className="block text-xs font-medium text-zinc-500 mb-1.5">Password</label>
+                            <div className="relative">
+                                <input
+                                    type={showPw ? 'text' : 'password'}
+                                    value={form.password}
+                                    onChange={set('password')}
+                                    placeholder="Min. 6 characters"
+                                    className="w-full px-3 py-2.5 text-sm bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-900 pr-14"
+                                    required
+                                    minLength={6}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPw(p => !p)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-400 hover:text-zinc-600"
+                                >
+                                    {showPw ? 'Hide' : 'Show'}
+                                </button>
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-2.5 bg-zinc-900 text-white text-sm font-semibold rounded-lg hover:bg-zinc-700 transition-colors disabled:opacity-50"
+                        >
+                            {loading ? 'Creating account…' : 'Create Account'}
+                        </button>
+                    </form>
+                    <p className="text-center text-sm text-zinc-500 mt-4">
+                        Already have an account?{' '}
+                        <Link to="/login" className="text-zinc-900 font-medium hover:underline">Sign in</Link>
+                    </p>
+                </div>
             </div>
         </div>
-    )
+    );
 }
-export default Register;
